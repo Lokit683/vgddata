@@ -1,8 +1,13 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 set bootlist=vqazwsxedcrftgbyhnujmikolp1234567890
-set bootver=1_0
-set ver=1_2
+set bootver=1_1
+set ver=1_3
+
+set Vtemp=data/temp
+set VApp=data/temp
+set VAppCache=data/AppCache
+set VAppRuning=.bat;.vgd;
 
 set Colbackground=7
 set Coltext=8
@@ -15,6 +20,12 @@ if "%1"=="get" echo !%2!&exit /b
 color %Colbackground%%Coltext%
 cls
 for /f "tokens=* delims=" %%a in ('call vgd.bat get bootver') do set return=%%a
+if not exist data\ (
+	md data\
+	md data\temp
+	md data\App
+	md data\AppCache
+	)
 title  
 echo.           ^|
 echo.   \    /  ^| Boot version: %return%
@@ -34,7 +45,7 @@ echo.
 echo.
 call :color %Colbackground%9
 echo.
-call :echo "                                       Cheking intenet connecting."
+call :echo "                                Cheking intenet connecting. Or server powered."
 echo.
 call :echo "               #################                                                                      @"
 curl https://github.com/Lokit683/vgddata > nul
@@ -89,16 +100,72 @@ echo.  ^| this OS. Update? [Y\yes] [N\no]   ^| Server version: !return!
 echo.  \-----------------------------------/
 echo.
 choice /c:yn > nul
-if %errorlevel%==1 copy data\temp\upd\vgddata-main\vgd.bat vgd.bat /y
+if %errorlevel%==1 copy data\temp\upd\vgddata-main\vgd.bat vgd.bat /y > nul& goto boot
 
 :module4
 :: --- Loading all files and user settings
+cls
+echo.           ^|
+echo.    \  /   ^|
+echo.     \/    ^|
+echo.___________^|
+echo.
+echo.
+call :color %Colbackground%8
+echo.
+call :echo "                                           Loading files and user settings.."
+echo.
+call :echo "               #####################################################                                  @"
+if not exist data\user call :usercreator
+echo. [%time%] Loading "username"..
+set /p name=<data\user\name.txt
+echo. [%time%] Loaded "username".
+echo. [%time%] Loading "custom-color".
+(
+	set /p Colbackground=
+	set /p Coltext=
+	) < data\user\color.txt
+echo. [%time%] Loaded "custom-color".
+color %Colbackground%%Coltext%
+echo. [%time%] Set theme to "custom-color".
+echo. [%time%] Start "explorer.exe".
+:module5
 
-pause
+:: --- DESKTOP
+cls
+goto apimode
+goto module5
 
 
+exit /b
 
+:usercreator
+cls
+echo.           ^|
+echo.    \  /   ^| Registering new user.
+echo.     \/    ^|
+echo.___________^|
+echo.
+echo.
+echo. Enter the name:
+set /p name=^> 
+cls
+echo.           ^|
+echo.    \  /   ^| Registering new user.
+echo.     \/    ^|
+echo.___________^|
+echo.
+echo.
+echo. Name "%name%" is correct?
+echo.   [Y]   [N]
+choice /c:yn > nul
+if %errorlevel%==2 goto usercreator
+md data\user\
 
+echo.%name%>> data\user\name.txt
+echo.7>> data\user\color.txt
+echo.8>> data\user\color.txt
+md data\user\files
 
 
 exit /b
