@@ -3,7 +3,7 @@ SETLOCAL EnableDelayedExpansion
 :datarepack
 set bootlist=vqazwsxedcrftgbyhnujmikolp1234567890
 set bootver=1_1
-set ver=1_3_1
+set ver=1_3_2
 
 set Vtemp=data/temp
 set VApp=data/temp
@@ -216,6 +216,9 @@ if "%1"=="use" (
 	if !errorlevel!==1 goto %all:~4%
 	exit /b
 	)
+if "%1"=="power" if "%2"=="off" (
+	goto off
+	)
 
 exit /b 1
 
@@ -263,6 +266,20 @@ if "%errorlevel%"=="3" (
 goto module6
 
 
+:off
+color 07
+cls
+echo.                     __________
+echo.                    ^|          ^|
+echo.                    ^|  \    /  ^|
+echo.                    ^|   \/\/   ^|
+echo.                     ----------
+echo.
+echo.                         ^> Power off.
+pause > nul
+exit /b 103
+
+exit /b
 :: --------- UTILITS
 
 :color
