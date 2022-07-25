@@ -4,7 +4,7 @@ SETLOCAL EnableDelayedExpansion
 
 set bootlist=vqazwsxedcrftgbyhnujmikolp1234567890
 set bootver=1_1
-set ver=1_3_4
+set ver=1_3_5
 set Vtemp=data/temp
 set VApp=data/temp
 set VAppCache=data/AppCache
@@ -14,8 +14,6 @@ set Coltext=8
 if not exist SysConfig.yml set bootkey=1
 if exist SysConfig.yml set /p bootkey=<SysConfig.yml
 
-
-if not "%0"=="vgd.bat" exit /b 13
 if "%1"=="api" goto apimode
 if "%1"=="get" echo !%2!&exit /b
 :boot
@@ -73,7 +71,7 @@ cd /d data\temp\upd
 tar.exe -xf vgd.zip
 cd /d data\temp\upd\vgddata-main\
 for /f "tokens=* delims=" %%a in ('call vgd.bat get ver') do set return=%%a
-cd ..\..\..\..\
+cd ..\..\..\..
 for /f "tokens=* delims=" %%a in ('call vgd.bat get ver') do set return2=%%a
 if !return!==!return2! goto module4
 :module3
