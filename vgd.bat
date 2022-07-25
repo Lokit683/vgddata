@@ -1,21 +1,22 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 :datarepack
+
 set bootlist=vqazwsxedcrftgbyhnujmikolp1234567890
 set bootver=1_1
-set ver=1_3_2
-
+set ver=1_3_3
 set Vtemp=data/temp
 set VApp=data/temp
 set VAppCache=data/AppCache
 set VAppRuning=.bat;.vgd;
-
 set Colbackground=7
 set Coltext=8
-
-if "%1"=="api" goto apimode
 if not exist SysConfig.yml set bootkey=1
 if exist SysConfig.yml set /p bootkey=<SysConfig.yml
+
+
+if not "%0"=="vgd.bat" exit /b 13
+if "%1"=="api" goto apimode
 if "%1"=="get" echo !%2!&exit /b
 :boot
 color %Colbackground%%Coltext%
@@ -49,17 +50,8 @@ echo.
 call :echo "                                Cheking intenet connecting. Or server powered."
 echo.
 call :echo "               #################                                                                      @"
-curl https://github.com/Lokit683/vgddata > nul
+curl https://github.com/Lokit683/vgddata > nul && (call :color %Colbackground%a&call :echo "                                                    OK.") || (call :color %Colbackground%c&call :echo "                                                   ERROR.")
 echo.
-if "!errorlevel!"=="0" (
-	call :color %Colbackground%a
-	call :echo "                                                    OK."
-	) else (
-	call :color %Colbackground%c
-	call :echo "                                                   ERROR."
-	timeout 3 > nul
-	goto module4
-	)
 timeout 3 > nul
 :module2
 cls
@@ -190,12 +182,20 @@ goto ApiModeCms
 :ApiModeListCms
 set all=%*
 if "%1"=="exit" ( goto boot)
+if "%1"=="get" (
+	if not "%2"=="" (echo. %2: "!%2!") else (
+		echo. Sys: ver; bootver; bootlist; bootkey;
+		echo. Col: Colbackground, Coltext;
+		)
+	exit /b 2
+	)
 if "%1"=="help" (
 	echo.
 	echo. exit
 	echo. send ^<text^>
 	echo. use ^<value^>
-	echo. var ^<value^> ^<value^>
+	echo. var ^<value^> "^<value^>"
+	echo. get ^<value^>
 	echo.
 	exit /b 2
 	)
